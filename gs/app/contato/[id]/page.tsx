@@ -72,7 +72,7 @@ function Page({ params }: detalhesContatoProps) {
 
         <div className="flex justify-center mt-6">
           <Link
-            href="/listacontato"
+            href="/Listacontato"
             className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 transition-all duration-300"
           >
             Voltar

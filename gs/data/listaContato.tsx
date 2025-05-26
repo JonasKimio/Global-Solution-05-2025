@@ -16,7 +16,7 @@ export const listaContato: Contato[] = [
         github: 'https://github.com/FIAPJonasKI',
         linkedin: 'https://www.linkedin.com/in/jonas-kimio-isiki-43422b275/',
         email: 'mailto:rm560560@fiap.com.br',
-        foto: '/imagens/F_Jonas.jpg',
+        foto: '/images/F_Jonas.jpg',
         fotoalt: 'Foto de Jonas' 
     },
 
@@ -25,7 +25,7 @@ export const listaContato: Contato[] = [
         github: 'https://github.com/DanKendi',
         linkedin: 'https://www.linkedin.com/in/daniel-kendi-saijo-araki/',
         email: 'mailto:rm553043@fiap.com.br',
-        foto: '/imagens/F_Daniel.jpg',
+        foto: '/images/F_Daniel.jpg',
         fotoalt: 'Foto do Daniel'
     },
 
@@ -34,7 +34,7 @@ export const listaContato: Contato[] = [
         github: 'https://github.com/M4rkitos',
         linkedin: 'https://www.linkedin.com/in/marcos-vin%C3%ADcius-marques-9a5284264/',
         email: 'mailto:rm560475@fiap.com.br',
-        foto: '/imagens/F_Marcos.jpg',
+        foto: '/images/F_Marcos.jpg',
         fotoalt: 'Foto Marcos' 
     },
 ]
