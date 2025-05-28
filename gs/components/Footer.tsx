@@ -1,9 +1,9 @@
-export default function Footer() {
+function Footer() {
   return (
-    <div className="bg-[#32997f] dark:bg-[#110e24] text-white pt-[100px]">
-    <footer className="bg-black text-white h-24 flex items-center justify-center">
-      <p>Todos os direitos reservados &copy; - Global Solution - 2024</p>
+    <footer className="bg-black text-white text-center py-5">
+      <p>{new Date().getFullYear()} &copy; Global Solution. Todos os Direitos Reservados</p>
     </footer>
-    </div>
   );
 }
+
+export default Footer;

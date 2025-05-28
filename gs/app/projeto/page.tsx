@@ -1,4 +1,3 @@
-
 export default function Page() {
   return (
         <section className="min-h-screen bg-cover bg-center h-[400px] flex flex-col items-center justify-center text-white"

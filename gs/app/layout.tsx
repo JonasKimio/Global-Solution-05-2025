@@ -13,13 +13,11 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
           rel="stylesheet"
         />
-        <title>Global Solution</title>
+        <title>Trempo Certo</title>
       </head>
-      <body className="bg-gray-900 flex flex-col min-h-screen">
+      <body className="bg-blue-800 flex flex-col min-h-screen">
         <Header />
-        <main className="pt-24">
-          {children}
-        </main>
+        <main className="flex-grow container mx-auto">{children}</main>
         <Footer />
       </body>
     </html>

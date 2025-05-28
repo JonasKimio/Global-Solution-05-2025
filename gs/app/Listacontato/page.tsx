@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function Page() {
   return (
-    <div className="flex items-center justify-center bg-gray-900">
+    <div className="flex items-center justify-center">
       <div className="w-full max-w-5xl p-6 bg-white rounded-lg shadow-lg mt-20 mb-auto">
         <h1 className="font-bold text-center mb-6 text-black">Contatos</h1>
         <div className="overflow-x-auto">
@@ -40,7 +40,7 @@ function Page() {
                   <td className="py-3 px-4 text-center align-middle">
                     <Link
                       href={`/contato/${Contato.id}`}
-                      className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+                      className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
                     >
                       Ver Detalhes
                     </Link>

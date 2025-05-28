@@ -10,7 +10,7 @@ export default function Home() {
           <h1 className="text-5xl text-[#9afcff] drop-shadow-md">(Projeto)</h1>
           <p className="text-xl my-4 drop-shadow-md">(Descrição do Projeto)</p>
           <Link href="/projeto" className="bg-white text-black font-bold px-6 py-2 rounded-lg hover:bg-transparent hover:text-white border-4 border-white transition">
-            Ir para a (Projeto)
+            Ir para o (Projeto)
           </Link>
         </section>
 
