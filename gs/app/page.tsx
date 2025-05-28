@@ -6,7 +6,7 @@ export default function Home() {
   return (
       <main className="text-center">
         <section className="min-h-screen bg-cover bg-center h-[400px] flex flex-col items-center justify-center text-white"
-                 style={{ backgroundImage: "public/image/Banner.jpg" }}>
+                 style={{ backgroundImage: "public/images/Banner1.jpg" }}>
           <h1 className="text-5xl text-[#9afcff] drop-shadow-md">(Projeto)</h1>
           <p className="text-xl my-4 drop-shadow-md">(Descrição do Projeto)</p>
           <Link href="/projeto" className="bg-white text-black font-bold px-6 py-2 rounded-lg hover:bg-transparent hover:text-white border-4 border-white transition">
@@ -23,8 +23,8 @@ export default function Home() {
             (Descrição do Projeto)
           </p>
         </section>
-
-      <section className="border-4 border-white rounded-xl w-[70%] mx-auto my-10 p-6 bg-transparent dark:border-[#443e66] dark:bg-gradient-to-b dark:from-[#292258] dark:to-[#06050c]">
+      <div className="flex items-center">
+      <section className="mx-auto my-10 p-6 bg-transparent dark:border-[#443e66] dark:bg-gradient-to-b dark:from-[#292258] dark:to-[#06050c] ">
         <Image
           src="/images/FIAP.png"
           alt="Logo da FIAP"
@@ -34,6 +34,7 @@ export default function Home() {
           style={{ width: '300px', height: '300px' }}
         />
         </section>
+        </div>
       </main>
   );
 }

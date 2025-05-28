@@ -5,7 +5,7 @@ export default function Header() {
     <header className="w-full bg-green-500 text-black flex items-center justify-evenly p-4">
       <Link href="/">
         <Image
-          src="/public/imagens/Logo.png"
+          src="/images/Logo.png"
           alt="Logo da Global Solution"
           width={100}
           height={100}
