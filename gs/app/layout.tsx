@@ -1,5 +1,4 @@
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 
 export default function RootLayout({
   children,
@@ -16,7 +15,6 @@ export default function RootLayout({
         <title>Trempo Certo</title>
       </head>
       <body className="bg-blue-800 flex flex-col min-h-screen">
-        <Header />
         <main className="flex-grow container mx-auto">{children}</main>
         <Footer />
       </body>

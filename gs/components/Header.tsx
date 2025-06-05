@@ -19,9 +19,6 @@ export default function Header() {
             <Link href="/" className="text-black font-extrabold transition duration-300 hover:text-white">Home</Link>
           </li>
           <li>
-            <Link href="/projeto" className="text-black font-extrabold transition duration-300 hover:text-white">Projeto</Link>
-          </li>
-          <li>
             <Link href="/listacontato" className="text-black font-extrabold transition duration-300 hover:text-white">Integrantes</Link>
           </li>
         </ul>

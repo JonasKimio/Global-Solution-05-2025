@@ -17,7 +17,7 @@ export default function LoginPage() {
     if (usuario === "Admin" && senha === "Admin123") {
 
       setErro("");
-      router.push("/login/adminperresp");
+      router.push("/login/admin");
     } else {
       setErro("Usuário ou senha inválidos");
     }
