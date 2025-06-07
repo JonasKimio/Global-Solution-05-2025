@@ -4,7 +4,6 @@ import { listaContato } from "@/data/listaContato";
 import Image from "next/image";
 import Link from "next/link";
 import { use } from "react";
-import Header from "@/components/Header";
 
 type detalhesContatoProps = {
   params: Promise<{
@@ -21,7 +20,6 @@ function Page({ params }: detalhesContatoProps) {
 
   return (
     <>
-    <Header/>
     <div className="flex items-center justify-center p-6">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 mt-44 mb-auto">
         <h2 className="text-2xl font-bold text-center text-black mb-6 bg-gray-300">

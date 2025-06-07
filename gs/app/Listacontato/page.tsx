@@ -1,12 +1,10 @@
 import { listaContato } from "@/data/listaContato";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/Header";
 
 function Page() {
   return (
   <>
-  <Header />
     <div className="flex items-center justify-center">
       <div className="w-full max-w-5xl p-6 bg-white rounded-lg shadow-lg mt-20 mb-auto">
         <h1 className="font-bold text-center mb-6 text-black">Contatos</h1>

@@ -1,12 +1,9 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
-import Header from "@/components/Header";
 
 export default function Home() {
   return (
     <>
-    <Header />
       <main className="text-center">
         <section className="min-h-screen bg-cover bg-center h-[400px] flex flex-col items-center justify-center text-white"
                  style={{ backgroundImage: "public/images/Banner1.jpg" }}>
