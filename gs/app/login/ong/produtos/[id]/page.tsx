@@ -93,7 +93,7 @@ export default async function ProdutoDetalhesPage({ params }: { params: { id: st
 
       <div className="flex justify-center">
         <Link
-          href="/login/admin/ListaProdutos"
+          href="/login/ong"
           className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all"
         >
           Voltar
