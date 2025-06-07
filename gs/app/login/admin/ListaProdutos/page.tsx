@@ -50,7 +50,7 @@ export default function BuscarProdutoPage() {
         />
         <button
           onClick={buscarProduto}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
         >
           Buscar
         </button>
@@ -96,7 +96,7 @@ export default function BuscarProdutoPage() {
       </td>
       <td className="border px-4 py-2">{produto.status || "—"}</td>
       <td className="border px-4 py-2"><Link
-  href={`/login/admin/produtos/${produto.id_produto}`}
+  href={`/login/admin/ListaProdutos/produtos/${produto.id_produto}`}
   className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
 >
   Detalhes
@@ -106,6 +106,14 @@ export default function BuscarProdutoPage() {
 </tbody>
 </table>
       )}
+<div className="flex justify-center space-x-4 mb-6">
+    <Link
+    href="/login/admin"
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+            >
+              Voltar
+            </Link>
+            </div>
     </div>
   );
 }

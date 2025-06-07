@@ -89,6 +89,12 @@ export default function LoginPage() {
             >
               Voltar
             </Link>
+            <Link
+              href="/cadastrar"
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+            >
+              Registrar
+            </Link>
             <button
               type="submit"
               className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"

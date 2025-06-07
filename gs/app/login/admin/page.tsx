@@ -1,102 +1,92 @@
 "use client";
+
+import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-type Produto = {
-  id_produto: number;
-  usuario?: any;
-  nomeProduto: string;
-  descricao: string;
-  quantidade: number;
-  quantidadeDescricao: string;
-  validadesDias: number;
-  dataAnuncio: string;
-  valorEstimado: number;
-  status: string;
-};
+export default function LoginPage() {
+  const router = useRouter();
 
-
-export default function BuscarProdutoPage() {
-  const [busca, setBusca] = useState("");
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
 
-  const buscarProduto = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("https://gs-savingfoods-production.up.railway.app/usuarios/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, senha }),
+    });
+
+    let data = null;
+
+    const text = await response.text();
     try {
-      const res = await fetch(`https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(busca)}`);
-
-      if (!res.ok) throw new Error("Erro ao buscar produtos");
-
-      const data = await res.json();
-      console.log(data); // Veja os nomes exatos das propriedades
-      setProdutos(data);
-      setErro("");
-    } catch (err: any) {
-      setErro(err.message);
+      data = text ? JSON.parse(text) : null;
+    } catch (err) {
+      console.warn("Resposta não é JSON:", text);
     }
-  };
 
+    if (response.ok) {
+      setErro("");
+
+      localStorage.setItem("usuarioLogado", JSON.stringify(data));
+
+      switch (data?.tipo_usuario) {
+        case "ADMIN":
+          router.push("/login/admin");
+          break;
+        case "MERCADO":
+          router.push("/login/mercado");
+          break;
+        case "ONG_ABRIGO":
+          router.push("/login/ong");
+          break;
+        default:
+          setErro("Tipo de usuário desconhecido.");
+      }
+    } else {
+      setErro(data?.message || "Erro no login.");
+    }
+  } catch (error) {
+    console.error(error);
+    setErro("Erro de conexão com o servidor.");
+  }
+};
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Buscar Produto</h1>
-
-      <div className="mb-4 flex space-x-2">
-        <input
-          type="text"
-          placeholder="Digite o nome do produto"
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded w-80"
-        />
-        <button
-          onClick={buscarProduto}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Buscar
-        </button>
+    <div className="flex items-center justify-center">
+      <div className="bg-white border-4 border-gray-300 rounded-lg p-6 w-full max-w-3xl text-center mt-6 mb-auto">
+        <h1 className="text-3xl font-bold mb-6 text-gray-900">Admin</h1>
+          <div className="flex justify-center space-x-4 mb-6">
+            <Link
+              href="/login/admin/ListaProdutos"
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+            >
+              Lista Produtos
+            </Link>
+          </div>
+          <div className="flex justify-center space-x-4 mb-6">
+            <Link
+              href="/login/admin/ListaUsuarios"
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+            >
+              Lista Usuarios
+            </Link>
+          </div>
+          <div className="flex justify-center space-x-4 mb-6">
+            <Link
+              href="/"
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+            >
+              Sair
+            </Link>
+          </div>
       </div>
-
-      {erro && <p className="text-red-500">{erro}</p>}
-
-      {produtos.length > 0 && (
-        <table className="min-w-full bg-white border border-gray-300">
-  <thead>
-    <tr className="bg-gray-100">
-      <th className="border px-4 py-2">ID</th>
-      <th className="border px-4 py-2">Nome do Produto</th>
-      <th className="border px-4 py-2">Descrição</th>
-      <th className="border px-4 py-2">Quantidade</th>
-      <th className="border px-4 py-2">Unidade</th>
-      <th className="border px-4 py-2">Validade (dias)</th>
-      <th className="border px-4 py-2">Data do Anúncio</th>
-      <th className="border px-4 py-2">Valor Estimado (R$)</th>
-      <th className="border px-4 py-2">Status</th>
-    </tr>
-  </thead>
-<tbody>
-  {produtos.map((produto) => (
-    <tr key={produto.id_produto}>
-      <td className="border px-4 py-2">{produto.id_produto}</td>
-      <td className="border px-4 py-2">{produto.nomeProduto || "—"}</td>
-      <td className="border px-4 py-2">{produto.descricao || "—"}</td>
-      <td className="border px-4 py-2">{produto.quantidade || "—"}</td>
-      <td className="border px-4 py-2">{produto.quantidadeDescricao || "—"}</td>
-      <td className="border px-4 py-2">{produto.validadesDias || "—"}</td>
-      <td className="border px-4 py-2">
-        {produto.dataAnuncio
-          ? new Date(produto.dataAnuncio).toLocaleDateString("pt-BR")
-          : "—"}
-      </td>
-      <td className="border px-4 py-2">
-        {produto.valorEstimado != null
-          ? produto.valorEstimado.toFixed(2)
-          : "—"}
-      </td>
-      <td className="border px-4 py-2">{produto.status || "—"}</td>
-    </tr>
-  ))}
-</tbody>
-</table>
-      )}
     </div>
   );
 }
