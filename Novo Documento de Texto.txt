@@ -1,4 +1,0 @@
-email:  Senha:  Tipo:
-admin@plataforma.org admin123	ADMIN	
-mercado1@email.com senha1	MERCADO	
-abrigo1@email.com	senha6	ONG_ABRIGO
