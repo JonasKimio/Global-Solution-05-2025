@@ -80,6 +80,14 @@ export default function LoginPage() {
           </div>
           <div className="flex justify-center space-x-4 mb-6">
             <Link
+              href="/login/admin/ListaDoacoes"
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+            >
+              Lista Doações
+            </Link>
+          </div>
+          <div className="flex justify-center space-x-4 mb-6">
+            <Link
               href="/"
               className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
             >

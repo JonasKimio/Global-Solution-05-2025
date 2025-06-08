@@ -55,6 +55,14 @@ export default async function ProdutoDetalhesPage({ params }: { params: { id: st
           <p><strong>Valor Estimado (R$):</strong> {produto.valorEstimado?.toFixed(2) || "—"}</p>
           <p><strong>Status:</strong> {produto.status}</p>
         </div>
+        <div className="flex justify-center">
+  <Link
+    href={`/login/ong/produtos/${produto.id_produto}/Reservar`}
+    className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+  >
+    Reservar Produto
+  </Link>
+</div>
       </div>
 
       <div>
