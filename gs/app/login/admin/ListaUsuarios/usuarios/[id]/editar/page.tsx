@@ -1,25 +1,30 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, use } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
-export default function EditarUsuarioPage({ params }: { params: { id: string } }) {
-  const router = useRouter();
+export default function EditarUsuarioPage() {
+  const router = useRouter();  
+  const params = useParams();
+  const id = params?.id as string;
+  
   const [usuario, setUsuario] = useState<any>(null);
   const [enderecos, setEnderecos] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${params.id}`)
+    if (!id) return;
+
+    fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`)
       .then(res => res.json())
       .then(setUsuario);
 
     fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
       .then(res => res.json())
       .then((data: any[]) => {
-        const relacionados = data.filter(e => e.usuario?.id_usuario === Number(params.id));
+        const relacionados = data.filter(e => e.usuario?.id_usuario === Number(id));
         setEnderecos(relacionados);
       });
-  }, [params.id]);
+  }, [id]);
 
   const handleChange = (e: any) => {
     setUsuario({ ...usuario, [e.target.name]: e.target.value });
@@ -32,7 +37,7 @@ export default function EditarUsuarioPage({ params }: { params: { id: string } }
   };
 
   const handleSubmit = async () => {
-    await fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${params.id}`, {
+    await fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(usuario),
@@ -47,7 +52,7 @@ export default function EditarUsuarioPage({ params }: { params: { id: string } }
     }
 
     alert('Usuário e endereços atualizados.');
-    router.push(`/login/admin/ListaUsuarios/usuarios/${params.id}`);
+    router.push(`/login/admin/ListaUsuarios/usuarios/${id}`);
   };
 
   if (!usuario) return <p className="p-6">Carregando...</p>;
@@ -56,19 +61,19 @@ export default function EditarUsuarioPage({ params }: { params: { id: string } }
     <div className="p-6 space-y-6 bg-white">
       <h1 className="text-2xl font-bold">Editar Usuário</h1>
       <div className="space-y-4">
-        <input name="nome" value={usuario.nome} onChange={handleChange} placeholder="Nome" className="w-full p-2 border rounded" />
-        <input name="email" value={usuario.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border rounded" />
-        <input name="cnpj" value={usuario.cnpj} onChange={handleChange} placeholder="CNPJ" className="w-full p-2 border rounded" />
-        <input name="tipo_usuario" value={usuario.tipo_usuario} onChange={handleChange} placeholder="Tipo" className="w-full p-2 border rounded" />
+        <input name="nome" value={usuario.nome || ''} onChange={handleChange} placeholder="Nome" className="w-full p-2 border rounded" />
+        <input name="email" value={usuario.email || ''} onChange={handleChange} placeholder="Email" className="w-full p-2 border rounded" />
+        <input name="cnpj" value={usuario.cnpj || ''} onChange={handleChange} placeholder="CNPJ" className="w-full p-2 border rounded" />
+        <input name="tipo_usuario" value={usuario.tipo_usuario || ''} onChange={handleChange} placeholder="Tipo" className="w-full p-2 border rounded" />
       </div>
 
       <h2 className="text-xl font-semibold">Endereços</h2>
       {enderecos.map((endereco, idx) => (
         <div key={endereco.id_endereco} className="space-y-2 p-4 bg-white">
-          <input value={endereco.logradouro} onChange={e => handleEnderecoChange(idx, 'logradouro', e.target.value)} placeholder="Logradouro" className="w-full p-2 border rounded" />
-          <input value={endereco.numero} onChange={e => handleEnderecoChange(idx, 'numero', e.target.value)} placeholder="Número" className="w-full p-2 border rounded" />
-          <input value={endereco.bairro} onChange={e => handleEnderecoChange(idx, 'bairro', e.target.value)} placeholder="Bairro" className="w-full p-2 border rounded" />
-          <input value={endereco.cep} onChange={e => handleEnderecoChange(idx, 'cep', e.target.value)} placeholder="CEP" className="w-full p-2 border rounded" />
+          <input value={endereco.logradouro || ''} onChange={e => handleEnderecoChange(idx, 'logradouro', e.target.value)} placeholder="Logradouro" className="w-full p-2 border rounded" />
+          <input value={endereco.numero || ''} onChange={e => handleEnderecoChange(idx, 'numero', e.target.value)} placeholder="Número" className="w-full p-2 border rounded" />
+          <input value={endereco.bairro || ''} onChange={e => handleEnderecoChange(idx, 'bairro', e.target.value)} placeholder="Bairro" className="w-full p-2 border rounded" />
+          <input value={endereco.cep || ''} onChange={e => handleEnderecoChange(idx, 'cep', e.target.value)} placeholder="CEP" className="w-full p-2 border rounded" />
         </div>
       ))}
 

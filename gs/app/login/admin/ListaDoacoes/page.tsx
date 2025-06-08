@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Usuario = {
   idUsuario: number;
@@ -107,6 +108,14 @@ export default function TodasDoacoesPage() {
       ) : (
         <p>Nenhuma doação encontrada.</p>
       )}
+            <div className="flex justify-center space-x-4 mt-6">
+        <Link
+          href="/login/admin"
+          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+        >
+          Voltar
+        </Link>
+      </div>
     </div>
   );
 }

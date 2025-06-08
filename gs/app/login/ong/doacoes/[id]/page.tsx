@@ -90,7 +90,7 @@ export default function DetalhesDoacaoPage() {
 
     if (res.ok) {
       alert("Doação cancelada com sucesso!");
-      router.push("/login/ong/produtos");
+      router.push("/login/ong");
     } else {
       alert("Erro ao cancelar a doação");
     }

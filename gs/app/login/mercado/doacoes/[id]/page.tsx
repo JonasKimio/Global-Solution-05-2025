@@ -50,7 +50,9 @@ export default function DetalhesDoacaoPage() {
   const [doacao, setDoacao] = useState<Doacao | null>(null);
   const [enderecos, setEnderecos] = useState<Endereco[]>([]);
   const [erro, setErro] = useState("");
+  const [novoStatus, setNovoStatus] = useState("");
 
+  // Buscar dados da doação
   useEffect(() => {
     if (id) {
       fetch(`https://gs-savingfoods-production.up.railway.app/doacoes/${id}`)
@@ -58,11 +60,15 @@ export default function DetalhesDoacaoPage() {
           if (!res.ok) throw new Error("Erro ao carregar a doação");
           return res.json();
         })
-        .then((data: Doacao) => setDoacao(data))
+        .then((data: Doacao) => {
+          setDoacao(data);
+          setNovoStatus(data.status);
+        })
         .catch(err => setErro(err.message));
     }
   }, [id]);
 
+  // Buscar endereço do mercado
   useEffect(() => {
     if (doacao?.produto?.usuario?.id_usuario) {
       fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
@@ -80,27 +86,42 @@ export default function DetalhesDoacaoPage() {
     }
   }, [doacao]);
 
-  const cancelarPedido = async () => {
+  // Atualizar status da doação
+  const atualizarStatus = async () => {
     if (!doacao) return;
-    if (!confirm("Tem certeza que deseja cancelar esta doação?")) return;
+    if (!novoStatus) return alert("Escolha um novo status.");
+
+    const body = {
+      produto: { id_produto: doacao.produto.id_produto },
+      usuarioDoador: { id_usuario: doacao.usuarioDoador.id_usuario },
+      usuarioReceptor: { id_usuario: doacao.usuarioReceptor.id_usuario },
+      valorEstimado: doacao.valorEstimado,
+      dataDoacao: doacao.dataDoacao,
+      status: novoStatus,
+    };
 
     const res = await fetch(`https://gs-savingfoods-production.up.railway.app/doacoes/${doacao.idDoacao}`, {
-      method: "DELETE",
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
     });
 
     if (res.ok) {
-      alert("Doação cancelada com sucesso!");
-      router.push("/login/ong/produtos");
+      alert("Status atualizado com sucesso!");
+      const atualizada = await res.json();
+      setDoacao(atualizada);
     } else {
-      alert("Erro ao cancelar a doação");
+      alert("Erro ao atualizar o status.");
     }
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-300">
       <h1 className="text-2xl font-bold mb-4">Detalhes da Doação</h1>
+
       {erro && <p className="text-red-500">{erro}</p>}
       {!doacao && <p>Carregando dados...</p>}
+
       {doacao && (
         <>
           <section className="mb-6">
@@ -108,47 +129,57 @@ export default function DetalhesDoacaoPage() {
             <p><strong>ID:</strong> {doacao.idDoacao}</p>
             <p><strong>Valor Estimado:</strong> R$ {doacao.valorEstimado.toFixed(2)}</p>
             <p><strong>Data da Doação:</strong> {new Date(doacao.dataDoacao).toLocaleDateString("pt-BR")}</p>
-            <p><strong>Status:</strong> {doacao.status}</p>
+            <p><strong>Status Atual:</strong> {doacao.status}</p>
           </section>
 
           <section className="mb-6">
             <h2 className="text-xl font-semibold">Produto Doado</h2>
-            <p><strong>ID:</strong> {doacao.produto.id_produto}</p>
             <p><strong>Nome:</strong> {doacao.produto.nomeProduto}</p>
             <p><strong>Descrição:</strong> {doacao.produto.descricao}</p>
             <p><strong>Quantidade:</strong> {doacao.produto.quantidade} {doacao.produto.quantidadeDescricao}</p>
             <p><strong>Validade:</strong> {doacao.produto.validadesDias} dias</p>
-            <p><strong>Data do Anúncio:</strong> {new Date(doacao.produto.dataAnuncio).toLocaleDateString("pt-BR")}</p>
             <p><strong>Status do Produto:</strong> {doacao.produto.status}</p>
           </section>
 
-<section className="mb-6">
-  <h2 className="text-xl font-semibold">Endereço do Mercado</h2>
-  {enderecos.length > 0 ? (
-    enderecos.map(e => (
-      <p key={e.id_endereco}>
-        {e.logradouro}, {e.numero} - {e.bairro}, CEP {e.cep}
-      </p>
-    ))
-  ) : (
-    <p>Sem endereço cadastrado para esse mercado.</p>
-  )}
-</section>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold">Endereço do Mercado</h2>
+            {enderecos.length > 0 ? (
+              enderecos.map(e => (
+                <p key={e.id_endereco}>
+                  {e.logradouro}, {e.numero} - {e.bairro}, CEP {e.cep}
+                </p>
+              ))
+            ) : (
+              <p>Sem endereço cadastrado para esse mercado.</p>
+            )}
+          </section>
 
-      <div className="flex justify-center space-x-4 mb-6">
-        <Link
-          href="/login/mercado"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-        >
-          Editar Status
-        </Link>
-      </div>
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold">Atualizar Status</h2>
+<select
+  value={novoStatus}
+  onChange={(e) => setNovoStatus(e.target.value)}
+  className="border p-2 rounded w-full max-w-xs"
+>
+  <option value="">Selecione um status</option>
+  <option value="AGUARDANDO_RETIRADA">AGUARDANDO_RETIRADA</option>
+  <option value="RETIRADA">RETIRADA</option>
+  <option value="CANCELADO">CANCELADO</option>
+</select>
+            <button
+              onClick={atualizarStatus}
+              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all duration-300"
+            >
+              Salvar Status
+            </button>
+          </section>
         </>
       )}
-      <div className="flex justify-center space-x-4 mb-6">
+
+      <div className="flex justify-center space-x-4 mb-6 mt-8">
         <Link
           href="/login/mercado"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all duration-300"
         >
           Voltar
         </Link>

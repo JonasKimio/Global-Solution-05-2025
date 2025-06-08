@@ -1,62 +1,51 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function CadastroProduto() {
   const router = useRouter()
 
-  const [usuarioId, setUsuarioId] = useState<number | null>(null)
-
-  const [form, setForm] = useState({
-    nome_produto: '',
-    descricao: '',
-    quantidade: '',
-    quantidade_descricao: '',
-    validades_dias: '',
-    valor_estimado: '',
-  })
-
+  const [usuarioLogado, setUsuarioLogado] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const [form, setForm] = useState({
+    nomeProduto: '',
+    descricao: '',
+    quantidade: '',
+    quantidadeDescricao: '',
+    validadesDias: '',
+    valorEstimado: '',
+  })
+
   useEffect(() => {
-    const usuarioStr = localStorage.getItem('usuarioLogado') // Certifique-se de usar a chave correta
-    if (usuarioStr) {
+    const usuarioStorage = localStorage.getItem('usuarioLogado')
+    if (usuarioStorage) {
       try {
-        const usuario = JSON.parse(usuarioStr)
-        if (usuario?.id_usuario) {
-          setUsuarioId(usuario.id_usuario)
-        } else {
-          setError('Usuário inválido.')
-        }
-      } catch (e) {
-        console.error('Erro ao ler usuário do localStorage:', e)
-        setError('Erro ao carregar usuário.')
+        const usuario = JSON.parse(usuarioStorage)
+        setUsuarioLogado(usuario)
+      } catch (err) {
+        console.error('Erro ao ler usuário do localStorage:', err)
       }
-    } else {
-      setError('Usuário não logado. Faça login para cadastrar produtos.')
     }
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    setForm((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!usuarioId) {
-      setError('ID do usuário não encontrado.')
+    if (!usuarioLogado?.id_usuario) {
+      setError('Usuário não identificado.')
       return
     }
 
-    const { nome_produto, quantidade, validades_dias } = form
-    if (!nome_produto || !quantidade || !validades_dias) {
+    const { nomeProduto, quantidade, validadesDias } = form
+    if (!nomeProduto || !quantidade || !validadesDias) {
       setError('Preencha todos os campos obrigatórios.')
       return
     }
@@ -65,40 +54,36 @@ export default function CadastroProduto() {
     setError(null)
 
     const payload: any = {
-      nome_produto: form.nome_produto.trim(),
+      nomeProduto: nomeProduto.trim(),
       descricao: form.descricao?.trim() || null,
       quantidade: Number(form.quantidade),
-      quantidade_descricao: form.quantidade_descricao?.trim() || null,
-      validades_dias: Number(form.validades_dias),
+      quantidadeDescricao: form.quantidadeDescricao?.trim() || null,
+      validadesDias: Number(form.validadesDias),
       status: 'DISPONIVEL',
       usuario: {
-        id_usuario: usuarioId
-      }
+        id_usuario: usuarioLogado.id_usuario,
+      },
     }
 
-    if (form.valor_estimado) {
-      payload.valor_estimado = Number(form.valor_estimado)
+    if (form.valorEstimado) {
+      payload.valorEstimado = Number(form.valorEstimado)
     }
-
-    console.log('Enviando payload:', payload)
 
     try {
-      const response = await fetch('https://gs-savingfoods-production.up.railway.app/produtos', {
+      const res = await fetch('https://gs-savingfoods-production.up.railway.app/produtos', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
 
-      if (!response.ok) {
-        const errorText = await response.text()
+      if (!res.ok) {
+        const errorText = await res.text()
         console.error('Erro detalhado:', errorText)
-        throw new Error('Erro ao criar produto')
+        throw new Error('Erro ao cadastrar produto')
       }
 
       alert('Produto cadastrado com sucesso!')
-      router.push('/produtos')
+      router.push('/login/mercado')
     } catch (err) {
       console.error(err)
       setError('Erro ao cadastrar produto. Tente novamente.')
@@ -108,73 +93,65 @@ export default function CadastroProduto() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Cadastro de Produto</h1>
-
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+      <h1 className="text-2xl font-bold mb-4">Cadastrar Produto</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
-          name="nome_produto"
+          name="nomeProduto"
           placeholder="Nome do Produto *"
-          value={form.nome_produto}
+          value={form.nomeProduto}
           onChange={handleChange}
+          className="w-full p-2 border rounded"
           required
-          className="w-full border p-2 rounded"
         />
-
         <textarea
           name="descricao"
           placeholder="Descrição"
           value={form.descricao}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className="w-full p-2 border rounded"
         />
-
         <input
           name="quantidade"
           type="number"
           placeholder="Quantidade *"
           value={form.quantidade}
           onChange={handleChange}
+          className="w-full p-2 border rounded"
           required
-          className="w-full border p-2 rounded"
         />
-
         <input
-          name="quantidade_descricao"
-          placeholder="Unidade (ex: kg, unid.)"
-          value={form.quantidade_descricao}
+          name="quantidadeDescricao"
+          placeholder="Unidade (Ex: kg, caixas)"
+          value={form.quantidadeDescricao}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
+          className="w-full p-2 border rounded"
         />
-
         <input
-          name="validades_dias"
+          name="validadesDias"
           type="number"
-          placeholder="Dias até vencer *"
-          value={form.validades_dias}
+          placeholder="Validade (em dias) *"
+          value={form.validadesDias}
           onChange={handleChange}
+          className="w-full p-2 border rounded"
           required
-          className="w-full border p-2 rounded"
+        />
+        <input
+          name="valorEstimado"
+          type="number"
+          placeholder="Valor Estimado (opcional)"
+          value={form.valorEstimado}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
         />
 
-        <input
-          name="valor_estimado"
-          type="number"
-          step="0.01"
-          placeholder="Valor estimado"
-          value={form.valor_estimado}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
+        {error && <p className="text-red-600">{error}</p>}
 
         <button
           type="submit"
           disabled={loading}
-          className={`w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 ${
-            loading && 'opacity-50 cursor-not-allowed'
-          }`}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
         >
           {loading ? 'Cadastrando...' : 'Cadastrar Produto'}
         </button>

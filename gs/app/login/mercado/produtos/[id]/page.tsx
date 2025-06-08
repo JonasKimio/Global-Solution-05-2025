@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useRouter } from "next/navigation";
+import { notFound, useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -26,16 +26,19 @@ type Doacao = {
   status: string;
 };
 
-export default function ProdutoDetalhesPage({ params }: { params: { id: string } }) {
+export default function ProdutoDetalhesPage() {
   const router = useRouter();
+  const params = useParams();
   const [produto, setProduto] = useState<Produto | null>(null);
   const [doacoes, setDoacoes] = useState<Doacao[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
+      const id = Array.isArray(params.id) ? params.id[0] : params.id;
+
       const resProduto = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/${params.id}`
+        `https://gs-savingfoods-production.up.railway.app/produtos/${id}`
       );
 
       if (!resProduto.ok) return notFound();
@@ -52,16 +55,18 @@ export default function ProdutoDetalhesPage({ params }: { params: { id: string }
       setDoacoes(filtradas);
     }
 
-    fetchData();
-  }, [params.id]);
+    if (params.id) fetchData();
+  }, [params]);
 
   const handleDelete = async () => {
     const confirmar = confirm("Tem certeza que deseja deletar este produto?");
     if (!confirmar) return;
 
     setLoading(true);
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
+
     const res = await fetch(
-      `https://gs-savingfoods-production.up.railway.app/produtos/${params.id}`,
+      `https://gs-savingfoods-production.up.railway.app/produtos/${id}`,
       {
         method: "DELETE",
       }

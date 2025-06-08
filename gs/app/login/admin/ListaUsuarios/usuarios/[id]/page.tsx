@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation'; // ✅ useParams aqui
 import Link from 'next/link';
 
 type Usuario = {
@@ -21,29 +21,34 @@ type Endereco = {
   cep: string;
 };
 
-export default function UsuarioDetalhesPage({ params }: { params: { id: string } }) {
+export default function UsuarioDetalhesPage() {
   const router = useRouter();
+  const params = useParams(); // ✅ obtém os params
+  const id = params?.id as string;
+
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [enderecos, setEnderecos] = useState<Endereco[]>([]);
 
   useEffect(() => {
-    fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${params.id}`)
+    if (!id) return;
+
+    fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`)
       .then(res => res.json())
       .then(setUsuario);
 
     fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
       .then(res => res.json())
       .then((data: Endereco[]) => {
-        const relacionados = data.filter((e: any) => e.usuario?.id_usuario === Number(params.id));
+        const relacionados = data.filter((e: any) => e.usuario?.id_usuario === Number(id));
         setEnderecos(relacionados);
       });
-  }, [params.id]);
+  }, [id]);
 
   const handleDelete = async () => {
     const confirmar = confirm('Deseja realmente deletar este usuário e todas as ligações?');
     if (!confirmar) return;
 
-    const res = await fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${params.id}`, {
+    const res = await fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`, {
       method: 'DELETE',
     });
 
