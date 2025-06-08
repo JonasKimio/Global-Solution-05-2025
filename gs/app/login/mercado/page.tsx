@@ -30,17 +30,34 @@ export default function BuscarProdutoPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [doacoes, setDoacoes] = useState<Doacao[]>([]);
   const [erro, setErro] = useState("");
+  const [usuarioLogado, setUsuarioLogado] = useState<any>(null);
+
+  useEffect(() => {
+    const usuarioStorage = localStorage.getItem("usuarioLogado");
+    if (usuarioStorage) {
+      const usuario = JSON.parse(usuarioStorage);
+      setUsuarioLogado(usuario);
+    }
+  }, []);
 
   const buscarProduto = async () => {
     try {
       const res = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(busca)}`
+        `https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(
+          busca
+        )}`
       );
 
       if (!res.ok) throw new Error("Erro ao buscar produtos");
 
       const data = await res.json();
-      setProdutos(data);
+
+      // Filtra apenas os produtos do usuário logado
+      const meusProdutos = data.filter(
+        (p: Produto) => p.usuario?.id_usuario === usuarioLogado?.id_usuario
+      );
+
+      setProdutos(meusProdutos);
       setErro("");
     } catch (err: any) {
       setErro(err.message);
@@ -49,10 +66,7 @@ export default function BuscarProdutoPage() {
 
   // Buscar doações do usuário logado
   useEffect(() => {
-    const usuarioLogado = localStorage.getItem("usuarioLogado");
     if (!usuarioLogado) return;
-
-    const usuario = JSON.parse(usuarioLogado);
 
     async function buscarDoacoes() {
       try {
@@ -64,7 +78,8 @@ export default function BuscarProdutoPage() {
         const todas = await res.json();
 
         const minhas = todas.filter(
-          (d: Doacao) => d.usuarioDoador?.id_usuario === usuario.id_usuario
+          (d: Doacao) =>
+            d.usuarioDoador?.id_usuario === usuarioLogado.id_usuario
         );
 
         setDoacoes(minhas);
@@ -74,8 +89,7 @@ export default function BuscarProdutoPage() {
     }
 
     buscarDoacoes();
-  }, []);
-
+  }, [usuarioLogado]);
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Buscar Produto</h1>
@@ -94,7 +108,13 @@ export default function BuscarProdutoPage() {
         >
           Buscar
         </button>
-      </div>
+        <Link
+        href={`/login/mercado/cadastroproduto`}
+        className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+        >
+        Adicionar Produto
+        </Link>
+        </div>
 
       {erro && <p className="text-red-500">{erro}</p>}
 
