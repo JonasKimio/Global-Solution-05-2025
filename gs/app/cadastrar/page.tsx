@@ -67,7 +67,7 @@ export default function CadastrarUsuarioPage() {
         if (!enderecoRes.ok) throw new Error("Erro ao cadastrar endereço");
       }
 
-      router.push("/login/admin/ListaUsuarios");
+      router.push("/login");
     } catch (err: any) {
       setErro(err.message);
     }
