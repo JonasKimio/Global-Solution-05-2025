@@ -27,29 +27,50 @@ export default function TodasDoacoesPage() {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-    fetch("https://gs-savingfoods-production.up.railway.app/doacoes")
-      .then((res) => {
+    const fetchDoacoes = async () => {
+      try {
+        const res = await fetch(
+          "https://gs-savingfoods-production.up.railway.app/doacoes"
+        );
         if (!res.ok) throw new Error("Erro ao buscar doações");
-        return res.json();
-      })
-      .then((data) => setDoacoes(data))
-      .catch((err) => setErro(err.message));
+
+        const data: Doacao[] = await res.json();
+        setDoacoes(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setErro(err.message);
+        } else {
+          setErro("Erro desconhecido ao buscar doações.");
+        }
+      }
+    };
+
+    fetchDoacoes();
   }, []);
 
   const deletarDoacao = async (id: number) => {
-    const confirm = window.confirm("Tem certeza que deseja cancelar esta doação?");
+    const confirm = window.confirm(
+      "Tem certeza que deseja cancelar esta doação?"
+    );
     if (!confirm) return;
 
     try {
-      const res = await fetch(`https://gs-savingfoods-production.up.railway.app/doacoes/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://gs-savingfoods-production.up.railway.app/doacoes/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!res.ok) throw new Error("Erro ao deletar a doação");
 
-      setDoacoes(doacoes.filter((d) => d.idDoacao !== id));
-    } catch (err: any) {
-      setErro(err.message);
+      setDoacoes((prev) => prev.filter((d) => d.idDoacao !== id));
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido ao deletar doação.");
+      }
     }
   };
 
@@ -84,7 +105,9 @@ export default function TodasDoacoesPage() {
                 <td className="border px-4 py-2">
                   {d.usuarioReceptor?.nome} (ID {d.usuarioReceptor?.idUsuario})
                 </td>
-                <td className="border px-4 py-2">R$ {d.valorEstimado.toFixed(2)}</td>
+                <td className="border px-4 py-2">
+                  R$ {d.valorEstimado.toFixed(2)}
+                </td>
                 <td className="border px-4 py-2">
                   {new Date(d.dataDoacao).toLocaleDateString("pt-BR")}
                 </td>
@@ -108,10 +131,10 @@ export default function TodasDoacoesPage() {
       ) : (
         <p>Nenhuma doação encontrada.</p>
       )}
-            <div className="flex justify-center space-x-4 mt-6">
+      <div className="flex justify-center space-x-4 mt-6">
         <Link
           href="/login/admin"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
         >
           Voltar
         </Link>

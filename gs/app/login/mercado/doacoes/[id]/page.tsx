@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 
 type Usuario = {
@@ -45,18 +45,16 @@ type Doacao = {
 
 export default function DetalhesDoacaoPage() {
   const { id } = useParams();
-  const router = useRouter();
 
   const [doacao, setDoacao] = useState<Doacao | null>(null);
   const [enderecos, setEnderecos] = useState<Endereco[]>([]);
   const [erro, setErro] = useState("");
   const [novoStatus, setNovoStatus] = useState("");
 
-  // Buscar dados da doação
   useEffect(() => {
     if (id) {
       fetch(`https://gs-savingfoods-production.up.railway.app/doacoes/${id}`)
-        .then(res => {
+        .then((res) => {
           if (!res.ok) throw new Error("Erro ao carregar a doação");
           return res.json();
         })
@@ -64,21 +62,22 @@ export default function DetalhesDoacaoPage() {
           setDoacao(data);
           setNovoStatus(data.status);
         })
-        .catch(err => setErro(err.message));
+        .catch((err) => setErro(err.message));
     }
   }, [id]);
 
-  // Buscar endereço do mercado
   useEffect(() => {
     if (doacao?.produto?.usuario?.id_usuario) {
-      fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
-        .then(res => {
+      fetch(
+        `https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`
+      )
+        .then((res) => {
           if (!res.ok) throw new Error("Erro ao carregar endereços");
           return res.json();
         })
         .then((data: Endereco[]) => {
-          const filtered = data.filter(e =>
-            e.usuario.id_usuario === doacao.produto.usuario.id_usuario
+          const filtered = data.filter(
+            (e) => e.usuario.id_usuario === doacao.produto.usuario.id_usuario
           );
           setEnderecos(filtered);
         })
@@ -86,7 +85,6 @@ export default function DetalhesDoacaoPage() {
     }
   }, [doacao]);
 
-  // Atualizar status da doação
   const atualizarStatus = async () => {
     if (!doacao) return;
     if (!novoStatus) return alert("Escolha um novo status.");
@@ -100,11 +98,14 @@ export default function DetalhesDoacaoPage() {
       status: novoStatus,
     };
 
-    const res = await fetch(`https://gs-savingfoods-production.up.railway.app/doacoes/${doacao.idDoacao}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const res = await fetch(
+      `https://gs-savingfoods-production.up.railway.app/doacoes/${doacao.idDoacao}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
 
     if (res.ok) {
       alert("Status atualizado com sucesso!");
@@ -126,25 +127,46 @@ export default function DetalhesDoacaoPage() {
         <>
           <section className="mb-6">
             <h2 className="text-xl font-semibold">Informações da Doação</h2>
-            <p><strong>ID:</strong> {doacao.idDoacao}</p>
-            <p><strong>Valor Estimado:</strong> R$ {doacao.valorEstimado.toFixed(2)}</p>
-            <p><strong>Data da Doação:</strong> {new Date(doacao.dataDoacao).toLocaleDateString("pt-BR")}</p>
-            <p><strong>Status Atual:</strong> {doacao.status}</p>
+            <p>
+              <strong>ID:</strong> {doacao.idDoacao}
+            </p>
+            <p>
+              <strong>Valor Estimado:</strong> R${" "}
+              {doacao.valorEstimado.toFixed(2)}
+            </p>
+            <p>
+              <strong>Data da Doação:</strong>{" "}
+              {new Date(doacao.dataDoacao).toLocaleDateString("pt-BR")}
+            </p>
+            <p>
+              <strong>Status Atual:</strong> {doacao.status}
+            </p>
           </section>
 
           <section className="mb-6">
             <h2 className="text-xl font-semibold">Produto Doado</h2>
-            <p><strong>Nome:</strong> {doacao.produto.nomeProduto}</p>
-            <p><strong>Descrição:</strong> {doacao.produto.descricao}</p>
-            <p><strong>Quantidade:</strong> {doacao.produto.quantidade} {doacao.produto.quantidadeDescricao}</p>
-            <p><strong>Validade:</strong> {doacao.produto.validadesDias} dias</p>
-            <p><strong>Status do Produto:</strong> {doacao.produto.status}</p>
+            <p>
+              <strong>Nome:</strong> {doacao.produto.nomeProduto}
+            </p>
+            <p>
+              <strong>Descrição:</strong> {doacao.produto.descricao}
+            </p>
+            <p>
+              <strong>Quantidade:</strong> {doacao.produto.quantidade}{" "}
+              {doacao.produto.quantidadeDescricao}
+            </p>
+            <p>
+              <strong>Validade:</strong> {doacao.produto.validadesDias} dias
+            </p>
+            <p>
+              <strong>Status do Produto:</strong> {doacao.produto.status}
+            </p>
           </section>
 
           <section className="mb-6">
             <h2 className="text-xl font-semibold">Endereço do Mercado</h2>
             {enderecos.length > 0 ? (
-              enderecos.map(e => (
+              enderecos.map((e) => (
                 <p key={e.id_endereco}>
                   {e.logradouro}, {e.numero} - {e.bairro}, CEP {e.cep}
                 </p>
@@ -156,19 +178,19 @@ export default function DetalhesDoacaoPage() {
 
           <section className="mb-6">
             <h2 className="text-xl font-semibold">Atualizar Status</h2>
-<select
-  value={novoStatus}
-  onChange={(e) => setNovoStatus(e.target.value)}
-  className="border p-2 rounded w-full max-w-xs"
->
-  <option value="">Selecione um status</option>
-  <option value="AGUARDANDO_RETIRADA">AGUARDANDO_RETIRADA</option>
-  <option value="RETIRADA">RETIRADA</option>
-  <option value="CANCELADO">CANCELADO</option>
-</select>
+            <select
+              value={novoStatus}
+              onChange={(e) => setNovoStatus(e.target.value)}
+              className="border p-2 rounded w-full max-w-xs"
+            >
+              <option value="">Selecione um status</option>
+              <option value="AGUARDANDO_RETIRADA">AGUARDANDO_RETIRADA</option>
+              <option value="RETIRADA">RETIRADA</option>
+              <option value="CANCELADO">CANCELADO</option>
+            </select>
             <button
               onClick={atualizarStatus}
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all duration-300"
+              className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 transition-all duration-300"
             >
               Salvar Status
             </button>
@@ -179,7 +201,7 @@ export default function DetalhesDoacaoPage() {
       <div className="flex justify-center space-x-4 mb-6 mt-8">
         <Link
           href="/login/mercado"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 transition-all duration-300"
         >
           Voltar
         </Link>

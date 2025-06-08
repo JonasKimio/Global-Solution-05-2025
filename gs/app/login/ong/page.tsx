@@ -2,9 +2,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+type Usuario = {
+  id_usuario: number;
+  nome: string;
+  email: string;
+  cnpj?: string;
+  tipo_usuario: string;
+};
+
 type Produto = {
   id_produto: number;
-  usuario?: any;
+  usuario?: Usuario;
   nomeProduto: string;
   descricao: string;
   quantidade: number;
@@ -18,8 +26,8 @@ type Produto = {
 type Doacao = {
   idDoacao: number;
   produto: Produto;
-  usuarioReceptor: any;
-  usuarioDoador: any;
+  usuarioReceptor: Usuario;
+  usuarioDoador: Usuario;
   valorEstimado: number;
   dataDoacao: string;
   status: string;
@@ -34,16 +42,22 @@ export default function BuscarProdutoPage() {
   const buscarProduto = async () => {
     try {
       const res = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(busca)}`
+        `https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(
+          busca
+        )}`
       );
 
       if (!res.ok) throw new Error("Erro ao buscar produtos");
 
-      const data = await res.json();
+      const data: Produto[] = await res.json();
       setProdutos(data);
       setErro("");
-    } catch (err: any) {
-      setErro(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido ao buscar produtos.");
+      }
     }
   };
 
@@ -51,7 +65,7 @@ export default function BuscarProdutoPage() {
     const usuarioLogado = localStorage.getItem("usuarioLogado");
     if (!usuarioLogado) return;
 
-    const usuario = JSON.parse(usuarioLogado);
+    const usuario: Usuario = JSON.parse(usuarioLogado);
 
     async function buscarDoacoes() {
       try {
@@ -60,14 +74,13 @@ export default function BuscarProdutoPage() {
         );
         if (!res.ok) throw new Error("Erro ao buscar doações");
 
-        const todas = await res.json();
-
+        const todas: Doacao[] = await res.json();
         const minhas = todas.filter(
-          (d: Doacao) => d.usuarioReceptor?.id_usuario === usuario.id_usuario
+          (d) => d.usuarioReceptor?.id_usuario === usuario.id_usuario
         );
 
         setDoacoes(minhas);
-      } catch (err) {
+      } catch (err: unknown) {
         console.error(err);
       }
     }
@@ -89,7 +102,7 @@ export default function BuscarProdutoPage() {
         />
         <button
           onClick={buscarProduto}
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
         >
           Buscar
         </button>
@@ -120,7 +133,9 @@ export default function BuscarProdutoPage() {
                 <td className="border px-4 py-2">{produto.nomeProduto}</td>
                 <td className="border px-4 py-2">{produto.descricao}</td>
                 <td className="border px-4 py-2">{produto.quantidade}</td>
-                <td className="border px-4 py-2">{produto.quantidadeDescricao}</td>
+                <td className="border px-4 py-2">
+                  {produto.quantidadeDescricao}
+                </td>
                 <td className="border px-4 py-2">{produto.validadesDias}</td>
                 <td className="border px-4 py-2">
                   {new Date(produto.dataAnuncio).toLocaleDateString("pt-BR")}
@@ -132,7 +147,7 @@ export default function BuscarProdutoPage() {
                 <td className="border px-4 py-2">
                   <Link
                     href={`/login/ong/produtos/${produto.id_produto}`}
-                    className="inline-block py-1 px-3 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+                    className="inline-block py-1 px-3 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
                   >
                     Detalhes
                   </Link>
@@ -161,30 +176,37 @@ export default function BuscarProdutoPage() {
               {doacoes.map((doacao) => (
                 <tr key={doacao.idDoacao}>
                   <td className="border px-4 py-2">{doacao.idDoacao}</td>
-                  <td className="border px-4 py-2">{doacao.produto?.nomeProduto || "—"}</td>
-                  <td className="border px-4 py-2">{doacao.valorEstimado?.toFixed(2)}</td>
+                  <td className="border px-4 py-2">
+                    {doacao.produto?.nomeProduto || "—"}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {doacao.valorEstimado?.toFixed(2)}
+                  </td>
                   <td className="border px-4 py-2">
                     {doacao.dataDoacao
                       ? new Date(doacao.dataDoacao).toLocaleDateString("pt-BR")
                       : "—"}
                   </td>
                   <td className="border px-4 py-2">{doacao.status}</td>
-                  <td className="border px-4 py-2">                  <Link
-                    href={`/login/ong/doacoes/${doacao.idDoacao}/`}
-                    className="inline-block py-1 px-3 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-                  >
-                    Detalhes
-                  </Link></td>
+                  <td className="border px-4 py-2">
+                    <Link
+                      href={`/login/ong/doacoes/${doacao.idDoacao}/`}
+                      className="inline-block py-1 px-3 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+                    >
+                      Detalhes
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
+
       <div className="flex justify-center space-x-4 mb-6">
         <Link
           href="/"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
         >
           Sair
         </Link>

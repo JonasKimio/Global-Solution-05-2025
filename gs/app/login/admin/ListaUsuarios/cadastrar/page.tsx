@@ -3,10 +3,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+interface FormData {
+  email: string;
+  cnpj: string;
+  nome: string;
+  senha: string;
+  confirmarSenha: string;
+  logradouro: string;
+  numero: string;
+  bairro: string;
+  cep: string;
+}
+
 export default function CadastrarUsuarioPage() {
   const router = useRouter();
   const [tipoUsuario, setTipoUsuario] = useState("ONG_ABRIGO");
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormData>({
     email: "",
     cnpj: "",
     nome: "",
@@ -19,11 +31,14 @@ export default function CadastrarUsuarioPage() {
   });
   const [erro, setErro] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErro("");
 
@@ -50,7 +65,13 @@ export default function CadastrarUsuarioPage() {
       if (!userRes.ok) throw new Error("Erro ao cadastrar usuário");
 
       if (tipoUsuario === "MERCADO") {
-        const user = await userRes.json();
+        const user: { id_usuario: number } = await userRes.json();
+
+        if (!form.logradouro || !form.numero || !form.bairro) {
+          setErro("Preencha todos os campos de endereço.");
+          return;
+        }
+
         const enderecoPayload = {
           logradouro: form.logradouro,
           numero: form.numero,
@@ -69,8 +90,12 @@ export default function CadastrarUsuarioPage() {
       }
 
       router.push("/login/admin/ListaUsuarios");
-    } catch (err: any) {
-      setErro(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido");
+      }
     }
   };
 
@@ -116,8 +141,8 @@ export default function CadastrarUsuarioPage() {
         {tipoUsuario === "MERCADO" && (
           <>
             <label className="block">
-                CNPJ: 
-                <input type="text" name="cnpj" value={form.cnpj} onChange={handleChange} className="w-full mt-1 border rounded p-2" />
+              CNPJ:
+              <input type="text" name="cnpj" value={form.cnpj} onChange={handleChange} className="w-full mt-1 border rounded p-2" />
             </label>
 
             <label className="block">
@@ -143,20 +168,21 @@ export default function CadastrarUsuarioPage() {
         )}
 
         {erro && <p className="text-red-600">{erro}</p>}
-          <div className="flex justify-center space-x-4 mb-6">
-            <Link
-              href="/login/admin/ListaUsuarios"
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-            >
-              Voltar
-            </Link>
-            <button
-              type="submit"
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-            >
-              Cadastrar
-            </button>
-          </div>
+
+        <div className="flex justify-center space-x-4 mb-6">
+          <Link
+            href="/login/admin/ListaUsuarios"
+            className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+          >
+            Voltar
+          </Link>
+          <button
+            type="submit"
+            className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+          >
+            Cadastrar
+          </button>
+        </div>
       </form>
     </div>
   );

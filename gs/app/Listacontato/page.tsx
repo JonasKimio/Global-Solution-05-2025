@@ -41,7 +41,7 @@ function Page() {
                   <td className="py-3 px-4 text-center align-middle">
                     <Link
                       href={`/contato/${Contato.id}`}
-                      className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+                      className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
                     >
                       Ver Detalhes
                     </Link>

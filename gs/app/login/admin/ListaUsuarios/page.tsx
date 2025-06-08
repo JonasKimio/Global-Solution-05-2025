@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 type Usuario = {
   id_usuario: number;
@@ -17,7 +16,6 @@ export default function ListaUsuariosPage() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [busca, setBusca] = useState("");
   const [erro, setErro] = useState("");
-  const router = useRouter();
 
   const fetchUsuarios = async () => {
     try {
@@ -27,8 +25,12 @@ export default function ListaUsuariosPage() {
       if (!res.ok) throw new Error("Erro ao buscar usuários");
       const data = await res.json();
       setUsuarios(data);
-    } catch (err: any) {
-      setErro(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido");
+      }
     }
   };
 
@@ -54,7 +56,7 @@ export default function ListaUsuariosPage() {
         />
         <Link
           href="/login/admin/ListaUsuarios/cadastrar"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
         >
           Criar conta
         </Link>
@@ -105,7 +107,7 @@ export default function ListaUsuariosPage() {
       <div className="flex justify-center space-x-4 mt-6">
         <Link
           href="/login/admin"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
         >
           Voltar
         </Link>

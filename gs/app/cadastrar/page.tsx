@@ -19,7 +19,9 @@ export default function CadastrarUsuarioPage() {
   });
   const [erro, setErro] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -39,15 +41,17 @@ export default function CadastrarUsuarioPage() {
     };
 
     try {
-      const userRes = await fetch("https://gs-savingfoods-production.up.railway.app/usuarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(usuarioPayload),
-      });
+      const userRes = await fetch(
+        "https://gs-savingfoods-production.up.railway.app/usuarios",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(usuarioPayload),
+        }
+      );
 
       if (!userRes.ok) throw new Error("Erro ao cadastrar usuário");
 
-      // Se for mercado, cadastrar endereço
       if (tipoUsuario === "MERCADO") {
         const user = await userRes.json();
         const enderecoPayload = {
@@ -58,18 +62,25 @@ export default function CadastrarUsuarioPage() {
           id_usuario: user.id_usuario,
         };
 
-        const enderecoRes = await fetch("https://gs-savingfoods-production.up.railway.app/enderecos", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(enderecoPayload),
-        });
+        const enderecoRes = await fetch(
+          "https://gs-savingfoods-production.up.railway.app/enderecos",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(enderecoPayload),
+          }
+        );
 
         if (!enderecoRes.ok) throw new Error("Erro ao cadastrar endereço");
       }
 
       router.push("/login");
-    } catch (err: any) {
-      setErro(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido ao cadastrar.");
+      }
     }
   };
 
@@ -93,74 +104,135 @@ export default function CadastrarUsuarioPage() {
 
         <label className="block">
           Nome:
-          <input type="text" name="nome" value={form.nome} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+          <input
+            type="text"
+            name="nome"
+            value={form.nome}
+            onChange={handleChange}
+            required
+            className="w-full mt-1 border rounded p-2"
+          />
         </label>
 
         <label className="block">
           Email:
-          <input type="email" name="email" value={form.email} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="w-full mt-1 border rounded p-2"
+          />
         </label>
 
         <label className="block">
           Senha:
-          <input type="password" name="senha" value={form.senha} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+          <input
+            type="password"
+            name="senha"
+            value={form.senha}
+            onChange={handleChange}
+            required
+            className="w-full mt-1 border rounded p-2"
+          />
         </label>
 
         <label className="block">
           Confirmar Senha:
-          <input type="password" name="confirmarSenha" value={form.confirmarSenha} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+          <input
+            type="password"
+            name="confirmarSenha"
+            value={form.confirmarSenha}
+            onChange={handleChange}
+            required
+            className="w-full mt-1 border rounded p-2"
+          />
         </label>
 
         {tipoUsuario === "MERCADO" && (
           <>
+            <label className="block">
+              CNPJ:
+              <input
+                type="text"
+                name="cnpj"
+                value={form.cnpj}
+                onChange={handleChange}
+                className="w-full mt-1 border rounded p-2"
+              />
+            </label>
 
             <label className="block">
-                CNPJ:
-                <input type="text" name="cnpj" value={form.cnpj} onChange={handleChange} className="w-full mt-1 border rounded p-2" />
-            </label>
-            <label className="block">
               Logradouro:
-              <input type="text" name="logradouro" value={form.logradouro} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+              <input
+                type="text"
+                name="logradouro"
+                value={form.logradouro}
+                onChange={handleChange}
+                required
+                className="w-full mt-1 border rounded p-2"
+              />
             </label>
 
             <label className="block">
               Número:
-              <input type="text" name="numero" value={form.numero} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+              <input
+                type="text"
+                name="numero"
+                value={form.numero}
+                onChange={handleChange}
+                required
+                className="w-full mt-1 border rounded p-2"
+              />
             </label>
 
             <label className="block">
               Bairro:
-              <input type="text" name="bairro" value={form.bairro} onChange={handleChange} required className="w-full mt-1 border rounded p-2" />
+              <input
+                type="text"
+                name="bairro"
+                value={form.bairro}
+                onChange={handleChange}
+                required
+                className="w-full mt-1 border rounded p-2"
+              />
             </label>
 
             <label className="block">
               CEP:
-              <input type="text" name="cep" value={form.cep} onChange={handleChange} className="w-full mt-1 border rounded p-2" />
+              <input
+                type="text"
+                name="cep"
+                value={form.cep}
+                onChange={handleChange}
+                className="w-full mt-1 border rounded p-2"
+              />
             </label>
           </>
         )}
 
         {erro && <p className="text-red-600">{erro}</p>}
-          <div className="flex justify-center space-x-4 mb-6">
-            <Link
-              href="/"
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-            >
-              Voltar
-            </Link>
-            <Link
-              href="/login"
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-            >
-              Login
-            </Link>
-            <button
-              type="submit"
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-            >
-              Cadastrar
-            </button>
-          </div>
+        <div className="flex justify-center space-x-4 mb-6">
+          <Link
+            href="/"
+            className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+          >
+            Voltar
+          </Link>
+          <Link
+            href="/login"
+            className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+          >
+            Login
+          </Link>
+          <button
+            type="submit"
+            className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+          >
+            Cadastrar
+          </button>
+        </div>
       </form>
     </div>
   );

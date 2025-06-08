@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation'; // ✅ useParams aqui
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
 type Usuario = {
@@ -21,9 +21,15 @@ type Endereco = {
   cep: string;
 };
 
+type EnderecoComUsuario = Endereco & {
+  usuario?: {
+    id_usuario: number;
+  };
+};
+
 export default function UsuarioDetalhesPage() {
   const router = useRouter();
-  const params = useParams(); // ✅ obtém os params
+  const params = useParams();
   const id = params?.id as string;
 
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -32,14 +38,16 @@ export default function UsuarioDetalhesPage() {
   useEffect(() => {
     if (!id) return;
 
+    // Busca usuário
     fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`)
       .then(res => res.json())
       .then(setUsuario);
 
+    // Busca endereços relacionados
     fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
       .then(res => res.json())
-      .then((data: Endereco[]) => {
-        const relacionados = data.filter((e: any) => e.usuario?.id_usuario === Number(id));
+      .then((data: EnderecoComUsuario[]) => {
+        const relacionados = data.filter(e => e.usuario?.id_usuario === Number(id));
         setEnderecos(relacionados);
       });
   }, [id]);
@@ -89,7 +97,7 @@ export default function UsuarioDetalhesPage() {
         <div className="flex gap-4 mt-6">
           <Link
             href={`/login/admin/ListaUsuarios/usuarios/${usuario.id_usuario}/editar`}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
             Editar
           </Link>
@@ -105,7 +113,7 @@ export default function UsuarioDetalhesPage() {
       <div className="flex justify-center mt-6">
         <Link
           href="/login/admin/ListaUsuarios"
-          className="py-2 px-4 bg-green-600 text-white rounded-full hover:bg-white hover:text-green-600 border border-green-600"
+          className="py-2 px-4 bg-blue-600 text-white rounded-full hover:bg-white hover:text-blue-600 border border-blue-600"
         >
           Voltar
         </Link>

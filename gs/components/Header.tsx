@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 export default function Header() {
   return (
-    <header className="w-full bg-green-500 text-black flex items-center justify-evenly p-4">
+    <header className="w-full bg-white text-black flex items-center justify-evenly p-4">
       <Link href="/">
         <Image
           src="/images/Logo.png"
@@ -16,16 +16,18 @@ export default function Header() {
       <nav>
         <ul className="flex space-x-6 list-none">
           <li>
-            <Link href="/" className="text-black font-extrabold transition duration-300 hover:text-white">Home</Link>
+            <Link href="/" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Home</Link>
           </li>
           <li>
-            <Link href="/listacontato" className="text-black font-extrabold transition duration-300 hover:text-white">Integrantes</Link>
+            <Link href="/listacontato" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Integrantes</Link>
           </li>
         </ul>
       </nav>
       <nav>
         <ul className="flex space-x-6 list-none">
-          <li><Link href="/login" className="text-black font-extrabold transition duration-300 hover:text-white">Login</Link></li>
+          <li><Link href="/login" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Login</Link></li>
+            <p> / </p>
+          <li><Link href="/cadastrar" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Registrar</Link></li>
         </ul>
       </nav >
     </header >

@@ -2,9 +2,14 @@
 import { useState } from "react";
 import Link from "next/link";
 
+type Usuario = {
+  idUsuario: number;
+  nome: string;
+};
+
 type Produto = {
   id_produto: number;
-  usuario?: any;
+  usuario?: Usuario;
   nomeProduto: string;
   descricao: string;
   quantidade: number;
@@ -15,7 +20,6 @@ type Produto = {
   status: string;
 };
 
-
 export default function BuscarProdutoPage() {
   const [busca, setBusca] = useState("");
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -23,16 +27,23 @@ export default function BuscarProdutoPage() {
 
   const buscarProduto = async () => {
     try {
-      const res = await fetch(`https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(busca)}`);
+      const res = await fetch(
+        `https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(
+          busca
+        )}`
+      );
 
       if (!res.ok) throw new Error("Erro ao buscar produtos");
 
-      const data = await res.json();
-      console.log(data); // Veja os nomes exatos das propriedades
+      const data: Produto[] = await res.json();
       setProdutos(data);
       setErro("");
-    } catch (err: any) {
-      setErro(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro("Erro desconhecido");
+      }
     }
   };
 
@@ -50,7 +61,7 @@ export default function BuscarProdutoPage() {
         />
         <button
           onClick={buscarProduto}
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
         >
           Buscar
         </button>
@@ -60,60 +71,69 @@ export default function BuscarProdutoPage() {
 
       {produtos.length > 0 && (
         <table className="min-w-full bg-white border border-gray-300">
-  <thead>
-    <tr className="bg-gray-100">
-      <th className="border px-4 py-2">ID</th>
-      <th className="border px-4 py-2">Nome do Produto</th>
-      <th className="border px-4 py-2">Descrição</th>
-      <th className="border px-4 py-2">Quantidade</th>
-      <th className="border px-4 py-2">Unidade</th>
-      <th className="border px-4 py-2">Validade (dias)</th>
-      <th className="border px-4 py-2">Data do Anúncio</th>
-      <th className="border px-4 py-2">Valor Estimado (R$)</th>
-      <th className="border px-4 py-2">Status</th>
-      <th className="border px-4 py-2">Detalhes</th>
-
-    </tr>
-  </thead>
-<tbody>
-  {produtos.map((produto) => (
-    <tr key={produto.id_produto}>
-      <td className="border px-4 py-2">{produto.id_produto}</td>
-      <td className="border px-4 py-2">{produto.nomeProduto || "—"}</td>
-      <td className="border px-4 py-2">{produto.descricao || "—"}</td>
-      <td className="border px-4 py-2">{produto.quantidade || "—"}</td>
-      <td className="border px-4 py-2">{produto.quantidadeDescricao || "—"}</td>
-      <td className="border px-4 py-2">{produto.validadesDias || "—"}</td>
-      <td className="border px-4 py-2">
-        {produto.dataAnuncio
-          ? new Date(produto.dataAnuncio).toLocaleDateString("pt-BR")
-          : "—"}
-      </td>
-      <td className="border px-4 py-2">
-        {produto.valorEstimado != null
-          ? produto.valorEstimado.toFixed(2)
-          : "—"}
-      </td>
-      <td className="border px-4 py-2">{produto.status || "—"}</td>
-      <td className="border px-4 py-2"><Link
-  href={`/login/admin/ListaProdutos/produtos/${produto.id_produto}`}
-  className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
->
-  Detalhes
-</Link></td>
-    </tr>
-  ))}
-</tbody>
-</table>
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border px-4 py-2">ID</th>
+              <th className="border px-4 py-2">Nome do Produto</th>
+              <th className="border px-4 py-2">Descrição</th>
+              <th className="border px-4 py-2">Quantidade</th>
+              <th className="border px-4 py-2">Unidade</th>
+              <th className="border px-4 py-2">Validade (dias)</th>
+              <th className="border px-4 py-2">Data do Anúncio</th>
+              <th className="border px-4 py-2">Valor Estimado (R$)</th>
+              <th className="border px-4 py-2">Status</th>
+              <th className="border px-4 py-2">Detalhes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {produtos.map((produto) => (
+              <tr key={produto.id_produto}>
+                <td className="border px-4 py-2">{produto.id_produto}</td>
+                <td className="border px-4 py-2">
+                  {produto.nomeProduto || "—"}
+                </td>
+                <td className="border px-4 py-2">{produto.descricao || "—"}</td>
+                <td className="border px-4 py-2">
+                  {produto.quantidade || "—"}
+                </td>
+                <td className="border px-4 py-2">
+                  {produto.quantidadeDescricao || "—"}
+                </td>
+                <td className="border px-4 py-2">
+                  {produto.validadesDias || "—"}
+                </td>
+                <td className="border px-4 py-2">
+                  {produto.dataAnuncio
+                    ? new Date(produto.dataAnuncio).toLocaleDateString("pt-BR")
+                    : "—"}
+                </td>
+                <td className="border px-4 py-2">
+                  {produto.valorEstimado != null
+                    ? produto.valorEstimado.toFixed(2)
+                    : "—"}
+                </td>
+                <td className="border px-4 py-2">{produto.status || "—"}</td>
+                <td className="border px-4 py-2">
+                  <Link
+                    href={`/login/admin/ListaProdutos/produtos/${produto.id_produto}`}
+                    className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+                  >
+                    Detalhes
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-<div className="flex justify-center space-x-4 mb-6">
-    <Link
-    href="/login/admin"
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 hover:border-green-600 transition-all duration-300"
-            >
-              Voltar
-            </Link>
-            </div>
+      <div className="flex justify-center space-x-4 mb-6">
+        <Link
+          href="/login/admin"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 hover:border-blue-600 transition-all duration-300"
+        >
+          Voltar
+        </Link>
+      </div>
     </div>
   );
 }

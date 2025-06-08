@@ -13,9 +13,9 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
           rel="stylesheet"
         />
-        <title>Trempo Certo</title>
+        <title>Saving Foods</title>
       </head>
-      <body className="bg-blue-800 flex flex-col min-h-screen">
+      <body className="bg-blue-500 flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow container mx-auto">{children}</main>
         <Footer />

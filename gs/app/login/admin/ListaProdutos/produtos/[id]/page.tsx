@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -90,18 +90,37 @@ export default function ProdutoDetalhesPage() {
       <div>
         <h1 className="text-2xl font-bold mb-4">Detalhes do Produto</h1>
         <div className="bg-white p-4 rounded shadow-md space-y-2">
-          <p><strong>ID:</strong> {produto.id_produto}</p>
-          <p><strong>Nome:</strong> {produto.nomeProduto}</p>
-          <p><strong>Descrição:</strong> {produto.descricao || "—"}</p>
-          <p><strong>Quantidade:</strong> {produto.quantidade} {produto.quantidadeDescricao}</p>
-          <p><strong>Validade (dias):</strong> {produto.validadesDias}</p>
-          <p><strong>Data do Anúncio:</strong> {new Date(produto.dataAnuncio).toLocaleDateString("pt-BR")}</p>
-          <p><strong>Valor Estimado (R$):</strong> {produto.valorEstimado?.toFixed(2) || "—"}</p>
-          <p><strong>Status:</strong> {produto.status}</p>
+          <p>
+            <strong>ID:</strong> {produto.id_produto}
+          </p>
+          <p>
+            <strong>Nome:</strong> {produto.nomeProduto}
+          </p>
+          <p>
+            <strong>Descrição:</strong> {produto.descricao || "—"}
+          </p>
+          <p>
+            <strong>Quantidade:</strong> {produto.quantidade}{" "}
+            {produto.quantidadeDescricao}
+          </p>
+          <p>
+            <strong>Validade (dias):</strong> {produto.validadesDias}
+          </p>
+          <p>
+            <strong>Data do Anúncio:</strong>{" "}
+            {new Date(produto.dataAnuncio).toLocaleDateString("pt-BR")}
+          </p>
+          <p>
+            <strong>Valor Estimado (R$):</strong>{" "}
+            {produto.valorEstimado?.toFixed(2) || "—"}
+          </p>
+          <p>
+            <strong>Status:</strong> {produto.status}
+          </p>
           <div className="flex gap-4 pt-2">
             <Link
               href={`/login/admin/ListaProdutos/produtos/${produto.id_produto}/editar`}
-              className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all"
+              className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 transition-all"
             >
               Editar Produto
             </Link>
@@ -119,7 +138,9 @@ export default function ProdutoDetalhesPage() {
       <div>
         <h2 className="text-xl font-semibold mb-2">Doações Relacionadas</h2>
         {doacoes.length === 0 ? (
-          <p className="text-gray-600">Nenhuma doação registrada para este produto.</p>
+          <p className="text-gray-600">
+            Nenhuma doação registrada para este produto.
+          </p>
         ) : (
           <div className="overflow-auto">
             <table className="min-w-full table-auto border border-gray-300 text-sm bg-white">
@@ -137,10 +158,18 @@ export default function ProdutoDetalhesPage() {
                 {doacoes.map((doacao) => (
                   <tr key={doacao.idDoacao}>
                     <td className="border px-4 py-2">{doacao.idDoacao}</td>
-                    <td className="border px-4 py-2">{doacao.usuarioDoador?.nome || "—"}</td>
-                    <td className="border px-4 py-2">{doacao.usuarioReceptor?.nome || "—"}</td>
-                    <td className="border px-4 py-2">R$ {doacao.valorEstimado?.toFixed(2)}</td>
-                    <td className="border px-4 py-2">{new Date(doacao.dataDoacao).toLocaleDateString("pt-BR")}</td>
+                    <td className="border px-4 py-2">
+                      {doacao.usuarioDoador?.nome || "—"}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {doacao.usuarioReceptor?.nome || "—"}
+                    </td>
+                    <td className="border px-4 py-2">
+                      R$ {doacao.valorEstimado?.toFixed(2)}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {new Date(doacao.dataDoacao).toLocaleDateString("pt-BR")}
+                    </td>
                     <td className="border px-4 py-2">{doacao.status}</td>
                   </tr>
                 ))}
@@ -153,7 +182,7 @@ export default function ProdutoDetalhesPage() {
       <div className="flex justify-center">
         <Link
           href="/login/admin/ListaProdutos"
-          className="inline-block py-2 px-4 bg-green-600 text-white text-sm border-2 border-green-600 rounded-full hover:bg-white hover:text-green-600 transition-all"
+          className="inline-block py-2 px-4 bg-blue-600 text-white text-sm border-2 border-blue-600 rounded-full hover:bg-white hover:text-blue-600 transition-all"
         >
           Voltar
         </Link>

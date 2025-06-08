@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 
+// Importado de: "@/types/Produto"
 type Produto = {
   id_produto: number;
   nomeProduto: string;
@@ -20,19 +21,23 @@ type Produto = {
 
 export default function EditarProdutoPage() {
   const { id } = useParams() as { id: string };
-  const [produto, setProduto] = useState<Produto | null>(null);
-  const [formData, setFormData] = useState<Omit<Produto, 'id_produto' | 'usuario'>>({
-    nomeProduto: '',
-    descricao: '',
-    quantidade: 0,
-    quantidadeDescricao: '',
-    validadesDias: 0,
-    dataAnuncio: '',
-    valorEstimado: 0,
-    status: '',
-  });
-
   const router = useRouter();
+
+  const [produto, setProduto] = useState<Produto | null>(null);
+  const [carregando, setCarregando] = useState(true);
+
+  const [formData, setFormData] = useState<
+    Omit<Produto, "id_produto" | "usuario">
+  >({
+    nomeProduto: "",
+    descricao: "",
+    quantidade: 0,
+    quantidadeDescricao: "",
+    validadesDias: 0,
+    dataAnuncio: "",
+    valorEstimado: 0,
+    status: "",
+  });
 
   useEffect(() => {
     if (!id) return;
@@ -59,70 +64,80 @@ export default function EditarProdutoPage() {
         console.error("Erro ao carregar produto:", err);
         alert("Erro ao carregar dados do produto.");
         router.back();
-      });
-  }, [id]);
+      })
+      .finally(() => setCarregando(false));
+  }, [id, router]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
+    const numericFields = new Set([
+      "quantidade",
+      "validadesDias",
+      "valorEstimado",
+    ]);
+
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === 'quantidade' || name === 'validadesDias' || name === 'valorEstimado'
-          ? Number(value)
-          : value,
+      [name]: numericFields.has(name) ? Number(value) : value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!produto) return;
 
     const payload = {
       id_produto: produto.id_produto,
-      usuario: {
-        id_usuario: produto.usuario.id_usuario,
-      },
-      nomeProduto: formData.nomeProduto,
-      descricao: formData.descricao,
-      quantidade: formData.quantidade,
-      quantidadeDescricao: formData.quantidadeDescricao,
-      validadesDias: formData.validadesDias,
-      dataAnuncio: formData.dataAnuncio,
-      valorEstimado: formData.valorEstimado,
-      status: formData.status,
+      usuario: { id_usuario: produto.usuario.id_usuario },
+      ...formData,
     };
 
-    const response = await fetch(`https://gs-savingfoods-production.up.railway.app/produtos/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch(
+        `https://gs-savingfoods-production.up.railway.app/produtos/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
-    if (response.ok) {
-      alert('Produto atualizado com sucesso!');
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      alert("Produto atualizado com sucesso!");
       router.push(`/login/admin/ListaProdutos/produtos/${produto.id_produto}`);
-    } else {
-      const errorText = await response.text();
-      console.error("Erro ao atualizar produto:", errorText);
-      alert('Erro ao atualizar produto.');
+    } catch (err) {
+      console.error("Erro ao atualizar produto:", err);
+      alert("Erro ao atualizar produto.");
     }
   };
 
-  if (!produto) return <p className="p-6">Carregando...</p>;
+  if (carregando) return <p className="p-6">Carregando...</p>;
+
+  if (!produto) return <p className="p-6 text-red-600">Produto não encontrado.</p>;
 
   return (
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold">Editar Produto</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-4 rounded shadow">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-white p-4 rounded shadow"
+      >
         <div>
           <label className="block font-medium">ID</label>
-          <input value={produto.id_produto} disabled className="w-full border px-3 py-2 bg-gray-100 rounded" />
+          <input
+            value={produto.id_produto}
+            disabled
+            className="w-full border px-3 py-2 bg-gray-100 rounded"
+          />
         </div>
 
         <div>
@@ -219,7 +234,10 @@ export default function EditarProdutoPage() {
         </div>
 
         <div className="flex gap-4 pt-4">
-          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
             Salvar
           </button>
           <button

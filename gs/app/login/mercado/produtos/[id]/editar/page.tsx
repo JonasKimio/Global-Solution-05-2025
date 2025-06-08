@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 type Produto = {
   id_produto: number;
@@ -21,15 +21,17 @@ type Produto = {
 export default function EditarProdutoPage() {
   const { id } = useParams() as { id: string };
   const [produto, setProduto] = useState<Produto | null>(null);
-  const [formData, setFormData] = useState<Omit<Produto, 'id_produto' | 'usuario'>>({
-    nomeProduto: '',
-    descricao: '',
+  const [formData, setFormData] = useState<
+    Omit<Produto, "id_produto" | "usuario">
+  >({
+    nomeProduto: "",
+    descricao: "",
     quantidade: 0,
-    quantidadeDescricao: '',
+    quantidadeDescricao: "",
     validadesDias: 0,
-    dataAnuncio: '',
+    dataAnuncio: "",
     valorEstimado: 0,
-    status: '',
+    status: "",
   });
 
   const router = useRouter();
@@ -60,16 +62,20 @@ export default function EditarProdutoPage() {
         alert("Erro ao carregar dados do produto.");
         router.back();
       });
-  }, [id]);
+  }, [id, router]); // router adicionado aqui
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === 'quantidade' || name === 'validadesDias' || name === 'valorEstimado'
+        name === "quantidade" ||
+        name === "validadesDias" ||
+        name === "valorEstimado"
           ? Number(value)
           : value,
     }));
@@ -77,7 +83,6 @@ export default function EditarProdutoPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!produto) return;
 
     const payload = {
@@ -95,21 +100,24 @@ export default function EditarProdutoPage() {
       status: formData.status,
     };
 
-    const response = await fetch(`https://gs-savingfoods-production.up.railway.app/produtos/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      `https://gs-savingfoods-production.up.railway.app/produtos/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     if (response.ok) {
-      alert('Produto atualizado com sucesso!');
+      alert("Produto atualizado com sucesso!");
       router.push(`/login/mercado/produtos/${produto.id_produto}`);
     } else {
       const errorText = await response.text();
       console.error("Erro ao atualizar produto:", errorText);
-      alert('Erro ao atualizar produto.');
+      alert("Erro ao atualizar produto.");
     }
   };
 
@@ -119,10 +127,17 @@ export default function EditarProdutoPage() {
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold">Editar Produto</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-4 rounded shadow">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-white p-4 rounded shadow"
+      >
         <div>
           <label className="block font-medium">ID</label>
-          <input value={produto.id_produto} disabled className="w-full border px-3 py-2 bg-gray-100 rounded" />
+          <input
+            value={produto.id_produto}
+            disabled
+            className="w-full border px-3 py-2 bg-gray-100 rounded"
+          />
         </div>
 
         <div>
@@ -219,7 +234,10 @@ export default function EditarProdutoPage() {
         </div>
 
         <div className="flex gap-4 pt-4">
-          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
             Salvar
           </button>
           <button
