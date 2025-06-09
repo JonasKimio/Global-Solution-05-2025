@@ -19,7 +19,7 @@ export default function Header() {
             <Link href="/" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Home</Link>
           </li>
           <li>
-            <Link href="/listacontato" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Integrantes</Link>
+            <Link href="/Listacontato" className="text-black font-extrabold transition duration-300 hover:text-gray-400">Integrantes</Link>
           </li>
         </ul>
       </nav>
