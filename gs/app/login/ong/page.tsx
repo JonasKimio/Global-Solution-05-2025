@@ -42,7 +42,7 @@ export default function BuscarProdutoPage() {
   const buscarProduto = async () => {
     try {
       const res = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(
+        `https://gs-java-production-d3ea.up.railway.app/produtos/buscarproduto?produto=${encodeURIComponent(
           busca
         )}`
       );
@@ -70,7 +70,7 @@ export default function BuscarProdutoPage() {
     async function buscarDoacoes() {
       try {
         const res = await fetch(
-          "https://gs-savingfoods-production.up.railway.app/doacoes"
+          "https://gs-java-production-d3ea.up.railway.app/doacoes"
         );
         if (!res.ok) throw new Error("Erro ao buscar doações");
 

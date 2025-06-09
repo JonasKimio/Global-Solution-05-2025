@@ -30,7 +30,7 @@ export default function TodasDoacoesPage() {
     const fetchDoacoes = async () => {
       try {
         const res = await fetch(
-          "https://gs-savingfoods-production.up.railway.app/doacoes"
+          "https://gs-java-production-d3ea.up.railway.app/doacoes"
         );
         if (!res.ok) throw new Error("Erro ao buscar doações");
 
@@ -56,7 +56,7 @@ export default function TodasDoacoesPage() {
 
     try {
       const res = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/doacoes/${id}`,
+        `https://gs-java-production-d3ea.up.railway.app/doacoes/${id}`,
         {
           method: "DELETE",
         }

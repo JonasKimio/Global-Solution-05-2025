@@ -42,7 +42,7 @@ export default function EditarProdutoPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`https://gs-savingfoods-production.up.railway.app/produtos/${id}`)
+    fetch(`https://gs-java-production-d3ea.up.railway.app/produtos/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Erro ao buscar produto");
         return res.json();
@@ -98,7 +98,7 @@ export default function EditarProdutoPage() {
 
     try {
       const response = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/${id}`,
+        `https://gs-java-production-d3ea.up.railway.app/produtos/${id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

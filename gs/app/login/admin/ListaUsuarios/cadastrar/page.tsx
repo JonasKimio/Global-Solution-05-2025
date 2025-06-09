@@ -56,7 +56,7 @@ export default function CadastrarUsuarioPage() {
     };
 
     try {
-      const userRes = await fetch("https://gs-savingfoods-production.up.railway.app/usuarios", {
+      const userRes = await fetch("https://gs-java-production-d3ea.up.railway.app/usuarios", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(usuarioPayload),
@@ -80,7 +80,7 @@ export default function CadastrarUsuarioPage() {
           id_usuario: user.id_usuario,
         };
 
-        const enderecoRes = await fetch("https://gs-savingfoods-production.up.railway.app/enderecos", {
+        const enderecoRes = await fetch("https://gs-java-production-d3ea.up.railway.app/enderecos", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(enderecoPayload),

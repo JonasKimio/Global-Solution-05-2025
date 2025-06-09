@@ -94,7 +94,7 @@ export default function CadastroProduto() {
 
     try {
       const res = await fetch(
-        "https://gs-savingfoods-production.up.railway.app/produtos",
+        "https://gs-java-production-d3ea.up.railway.app/produtos",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

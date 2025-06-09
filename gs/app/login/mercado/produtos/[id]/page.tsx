@@ -38,7 +38,7 @@ export default function ProdutoDetalhesPage() {
       const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
       const resProduto = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/${id}`
+        `https://gs-java-production-d3ea.up.railway.app/produtos/${id}`
       );
 
       if (!resProduto.ok) return notFound();
@@ -46,7 +46,7 @@ export default function ProdutoDetalhesPage() {
       setProduto(produtoData);
 
       const resDoacoes = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/doacoes?page=0&pageSize=100`
+        `https://gs-java-production-d3ea.up.railway.app/doacoes?page=0&pageSize=100`
       );
       const todas: Doacao[] = await resDoacoes.json();
       const filtradas = todas.filter(
@@ -66,7 +66,7 @@ export default function ProdutoDetalhesPage() {
     const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
     const res = await fetch(
-      `https://gs-savingfoods-production.up.railway.app/produtos/${id}`,
+      `https://gs-java-production-d3ea.up.railway.app/produtos/${id}`,
       {
         method: "DELETE",
       }

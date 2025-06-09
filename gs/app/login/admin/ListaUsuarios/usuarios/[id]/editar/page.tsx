@@ -33,11 +33,11 @@ export default function EditarUsuarioPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`)
+    fetch(`https://gs-java-production-d3ea.up.railway.app/usuarios/${id}`)
       .then((res) => res.json())
       .then((data: Usuario) => setUsuario(data));
 
-    fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
+    fetch(`https://gs-java-production-d3ea.up.railway.app/enderecos?page=0&pageSize=100`)
       .then((res) => res.json())
       .then((data: Endereco[]) => {
         const relacionados = data.filter((e) => e.usuario?.id_usuario === Number(id));
@@ -59,14 +59,14 @@ export default function EditarUsuarioPage() {
   const handleSubmit = async () => {
     if (!usuario) return;
 
-    await fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`, {
+    await fetch(`https://gs-java-production-d3ea.up.railway.app/usuarios/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(usuario),
     });
 
     for (const endereco of enderecos) {
-      await fetch(`https://gs-savingfoods-production.up.railway.app/enderecos/${endereco.id_endereco}`, {
+      await fetch(`https://gs-java-production-d3ea.up.railway.app/enderecos/${endereco.id_endereco}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...endereco, usuario }),

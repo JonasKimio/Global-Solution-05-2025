@@ -39,12 +39,12 @@ export default function UsuarioDetalhesPage() {
     if (!id) return;
 
     // Busca usuário
-    fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`)
+    fetch(`https://gs-java-production-d3ea.up.railway.app/usuarios/${id}`)
       .then(res => res.json())
       .then(setUsuario);
 
     // Busca endereços relacionados
-    fetch(`https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`)
+    fetch(`https://gs-java-production-d3ea.up.railway.app/enderecos?page=0&pageSize=100`)
       .then(res => res.json())
       .then((data: EnderecoComUsuario[]) => {
         const relacionados = data.filter(e => e.usuario?.id_usuario === Number(id));
@@ -56,7 +56,7 @@ export default function UsuarioDetalhesPage() {
     const confirmar = confirm('Deseja realmente deletar este usuário e todas as ligações?');
     if (!confirmar) return;
 
-    const res = await fetch(`https://gs-savingfoods-production.up.railway.app/usuarios/${id}`, {
+    const res = await fetch(`https://gs-java-production-d3ea.up.railway.app/usuarios/${id}`, {
       method: 'DELETE',
     });
 

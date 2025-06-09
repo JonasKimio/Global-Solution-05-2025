@@ -23,7 +23,7 @@ export default function ReservarProdutoPage() {
   useEffect(() => {
     async function carregarProduto() {
       const res = await fetch(
-        `https://gs-savingfoods-production.up.railway.app/produtos/${params.id}`
+        `https://gs-java-production-d3ea.up.railway.app/produtos/${params.id}`
       );
       if (res.ok) {
         const data: Produto = await res.json();
@@ -57,7 +57,7 @@ export default function ReservarProdutoPage() {
     };
 
     const res = await fetch(
-      "https://gs-savingfoods-production.up.railway.app/doacoes",
+      "https://gs-java-production-d3ea.up.railway.app/doacoes",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

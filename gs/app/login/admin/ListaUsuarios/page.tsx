@@ -20,7 +20,7 @@ export default function ListaUsuariosPage() {
   const fetchUsuarios = async () => {
     try {
       const res = await fetch(
-        "https://gs-savingfoods-production.up.railway.app/usuarios?page=0&pageSize=100"
+        "https://gs-java-production-d3ea.up.railway.app/usuarios?page=0&pageSize=100"
       );
       if (!res.ok) throw new Error("Erro ao buscar usuários");
       const data = await res.json();

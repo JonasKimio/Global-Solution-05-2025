@@ -42,7 +42,7 @@ export default function CadastrarUsuarioPage() {
 
     try {
       const userRes = await fetch(
-        "https://gs-savingfoods-production.up.railway.app/usuarios",
+        "https://gs-java-production-d3ea.up.railway.app/usuarios",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ export default function CadastrarUsuarioPage() {
         };
 
         const enderecoRes = await fetch(
-          "https://gs-savingfoods-production.up.railway.app/enderecos",
+          "https://gs-java-production-d3ea.up.railway.app/enderecos",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

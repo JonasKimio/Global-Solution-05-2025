@@ -16,7 +16,7 @@ export default function LoginPage() {
 
     try {
       const response = await fetch(
-        "https://gs-savingfoods-production.up.railway.app/usuarios/login",
+        "https://gs-java-production-d3ea.up.railway.app/usuarios/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

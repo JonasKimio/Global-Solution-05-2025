@@ -53,7 +53,7 @@ export default function DetalhesDoacaoPage() {
 
   useEffect(() => {
     if (id) {
-      fetch(`https://gs-savingfoods-production.up.railway.app/doacoes/${id}`)
+      fetch(`https://gs-java-production-d3ea.up.railway.app/doacoes/${id}`)
         .then((res) => {
           if (!res.ok) throw new Error("Erro ao carregar a doação");
           return res.json();
@@ -66,7 +66,7 @@ export default function DetalhesDoacaoPage() {
   useEffect(() => {
     if (doacao?.produto?.usuario?.id_usuario) {
       fetch(
-        `https://gs-savingfoods-production.up.railway.app/enderecos?page=0&pageSize=100`
+        `https://gs-java-production-d3ea.up.railway.app/enderecos?page=0&pageSize=100`
       )
         .then((res) => {
           if (!res.ok) throw new Error("Erro ao carregar endereços");
@@ -87,7 +87,7 @@ export default function DetalhesDoacaoPage() {
     if (!confirm("Tem certeza que deseja cancelar esta doação?")) return;
 
     const res = await fetch(
-      `https://gs-savingfoods-production.up.railway.app/doacoes/${doacao.idDoacao}`,
+      `https://gs-java-production-d3ea.up.railway.app/doacoes/${doacao.idDoacao}`,
       {
         method: "DELETE",
       }

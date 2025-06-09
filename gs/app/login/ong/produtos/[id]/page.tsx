@@ -39,7 +39,7 @@ export default function ProdutoDetalhesOngPage() {
     async function fetchData() {
       try {
         const resProduto = await fetch(
-          `https://gs-savingfoods-production.up.railway.app/produtos/${id}`
+          `https://gs-java-production-d3ea.up.railway.app/produtos/${id}`
         );
 
         if (!resProduto.ok) {
@@ -51,7 +51,7 @@ export default function ProdutoDetalhesOngPage() {
         setProduto(produtoData);
 
         const resDoacoes = await fetch(
-          `https://gs-savingfoods-production.up.railway.app/doacoes?page=0&pageSize=100`
+          `https://gs-java-production-d3ea.up.railway.app/doacoes?page=0&pageSize=100`
         );
         const todas: Doacao[] = await resDoacoes.json();
         const filtradas = todas.filter(
